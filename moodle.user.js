@@ -24,6 +24,50 @@ head.appendChild(style);
 }
 
 
+function addCourseNameToCalendar(){
+  var calMatch = '//a[contains(@href,"https://moodle.tu-dortmund.de/calendar/view.php?view=day&course=")]'
+  const savedCourses = new Map();
+  var courseName;// = "undefined";
+  var calLength = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength;
+  console.log(calLength);
+  var id;
+  for (let index = 0; index < calLength; index++) {
+      id = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).href.split("&")[1].split("=")[1];
+      console.log(id);
+      if(savedCourses.has(id)&&savedCourses.get(id!=undefined)){
+        courseName = savedCourses.get(id);
+        document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).insertAdjacentHTML("beforeBegin",courseName + " -‎");
+        console.log("Got " + courseName);
+        continue;
+      } else {
+              var courseUrl = 'https://moodle.tu-dortmund.de/course/view.php?id=' + id;  // Replace with the URL of your Moodle site
+
+          fetch(courseUrl)
+              .then(response => response.text())
+              .then(html => {
+                  var parser = new DOMParser();
+                  var doc = parser.parseFromString(html, 'text/html');
+                  var courseNameElement = doc.querySelector('.page-header-headings h1');
+                  if (courseNameElement) {
+                      courseName = courseNameElement.innerText;
+                    courseName = courseName.split(",")[0];
+              savedCourses.set(String(id), String(courseName));
+              console.log("Set " + courseName + " at id " + id);
+      document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).insertAdjacentHTML("beforeBegin",courseName + " -‎");
+                  } else {
+                      console.log('Course not found');
+                  }
+    console.log(savedCourses);
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+
+      }
+
+  }
+}
+
 
 document.getElementsByTagName('body')[0].className = 'dark-theme || light-theme';
 
@@ -37,36 +81,6 @@ for (i = 0; i < document.links.length; i++) {
 			link.href = "https://sso.itmc.tu-dortmund.de/openam/XUI/?goto=https%3A%2F%2Fmoodle.tu-dortmund.de%2Flogin#login/";
 			break;
   }
-}
-
-
-var calMatch = '//a[contains(@href,"https://moodle.tu-dortmund.de/calendar/view.php?view=day&course=")]'
-for (let index = 0; index < document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength; index++) {
-    var id = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).href;
-    id = id.split("&")[1];
-    id = id.split("=")[1];
-    var courseName = "undefined";
-
-    var courseUrl = 'https://moodle.tu-dortmund.de/course/view.php?id=' + id;  // Replace with the URL of your Moodle site
-
-        fetch(courseUrl)
-            .then(response => response.text())
-            .then(html => {
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(html, 'text/html');
-                var courseNameElement = doc.querySelector('.page-header-headings h1');
-                if (courseNameElement) {
-                    courseName = courseNameElement.innerText;
-                  courseName = courseName.split(",")[0];
-    document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).insertAdjacentHTML("beforeBegin",courseName + " -‎");
-                } else {
-                    console.log('Course not found');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-
 }
 
 
@@ -123,7 +137,8 @@ addGlobalStyle('.card-deck > .card{border: 0.3rem solid rgba(0,0,0,.125) !import
 addGlobalStyle('#moremenu-6462516b87efe-navbar-nav > li:nth-child(5){innerHTML="LSF"}');
 // document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).insertAdjacentHTML("beforeBegin",
 
-
+// add Course to Calendar Elements on main page
+addCourseNameToCalendar();
 
 
 
