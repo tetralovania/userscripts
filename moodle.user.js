@@ -40,10 +40,11 @@ const addCourseNameToCalendar = async () => {
   }
 }
 
+const processedEvents = []; // Array to track processed event IDs
+
 async function courseNamesToMap() {
   const savedCourses = new Map();
   const calEvents = [];
-  const processedEvents = []; // Array to track processed event IDs
   let calMatch = '//a[contains(@href,"https://moodle.tu-dortmund.de/calendar/view.php?view=day&course=")]';
   const calLength = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength;
 
@@ -51,12 +52,25 @@ async function courseNamesToMap() {
     calEvents[index] = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).href.split("&")[1].split("=")[1];
   }
 
+  // Check if savedCourses exist in a cookie
+  const savedCoursesCookie = getCookie('savedCourses');
+  if (savedCoursesCookie) {
+    console.log("cookie found");
+    // Parse and load savedCourses from cookie
+    const parsedSavedCourses = parseMap(savedCoursesCookie);
+    if (parsedSavedCourses instanceof Map) {
+      parsedSavedCourses.forEach((value, key) => {
+        savedCourses.set(key, value);
+      });
+    }
+  }
+
   const fetchPromises = calEvents.map((eventId) => {
-    if (processedEvents.includes(eventId)) {
+    if (savedCourses.has(eventId)) {
       console.log("Course already saved");
       return Promise.resolve();
     } else {
-      processedEvents.push(eventId); // Add event ID to processed events
+      processedEvents.push(eventId);
 
       const courseUrl = 'https://moodle.tu-dortmund.de/course/view.php?id=' + eventId;
       return fetch(courseUrl)
@@ -66,8 +80,10 @@ async function courseNamesToMap() {
           const doc = parser.parseFromString(html, 'text/html');
           const courseNameElement = doc.querySelector('.page-header-headings h1');
           if (courseNameElement) {
+            console.log(eventId);
             const courseName = courseNameElement.innerText.split(",")[0];
             savedCourses.set(eventId, courseName);
+            console.log("fetched course");
           } else {
             console.log('Course not found');
           }
@@ -79,12 +95,73 @@ async function courseNamesToMap() {
   });
 
   await Promise.all(fetchPromises);
+
+  // Save savedCourses in a cookie
+  console.log(savedCourses);
+  setCookie('savedCourses', stringifyMap(savedCourses));
+
   return savedCourses;
 }
 
 
 
+function parseMap(string){
+  const out = new Map();
+  const keys = [];
+  const values = [];
+  const raw = string.split(",");
+  for(let i = 0; i < raw.length; i++){
+    if(i%2 == 0){
+      keys.push(raw[i]);
+    } else {
+      values.push(raw[i]);
+    }
+  }
+  for(let i = 0; i < keys.length; i++){
+    out.set(keys[i], values[i]);
+  }
+  return out;
+}
+
+function stringifyMap(map){
+  var out = "";
+  const keys = Array.from(map.keys());
+  const values = Array.from(map.values());
+  for(let i = 0; i < keys.length; i++){
+    out += (keys[i]+","+values[i]+",");
+  }
+  return out.substring(0, out.length -1);
+}
+
+// Helper function to get a cookie value by name
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(name + '=')) {
+      console.log(cookie.substring(name.length+1));
+      return cookie.substring(name.length + 1);
+    }
+  }
+  return '';
+}
+
+// Helper function to set a cookie
+function setCookie(name, value) {
+  document.cookie = `${name}=${value}`;
+}
+
+
+
+
+
 document.getElementsByTagName('body')[0].className = 'dark-theme || light-theme';
+
+// map colors correctly
+// COLORS
+addGlobalStyle(':root{--backgroundColor:#c8e68e; --darkAccent:#595959; --textColor:#ffffff;}');
+
+
 
 // skip login overview page
 // replace login button link
@@ -105,20 +182,17 @@ if(window.location.href.match("https://moodle.tu-dortmund.de/login/index.php")){
 }
 
 // change colors
-addGlobalStyle('body {background-color: #c8e68e !important;}'); //background
-addGlobalStyle('#page.drawers .main-inner{background-color: #595959 !important; padding: 4rem 0.3rem 0 0.3rem; margin: 0;}');
+addGlobalStyle('body {background-color: var(--backgroundColor) !important;}'); //background
+addGlobalStyle('#page.drawers .main-inner{background-color: var(--darkAccent) !important; padding: 4rem 0.3rem 0 0.3rem; margin: 0;}');
 //addGlobalStyle('body .dark-theme{background-color: #4e5938 !important;}'); //dark
-addGlobalStyle('h2, .h2{color: #FFFFFF;}'); //fixes text color
+addGlobalStyle('h2, .h2{color: var(--textColor);}'); //fixes text color
 
 //make overview elements not round
 addGlobalStyle('#page.drawers{margin-top:50px; height:auto;}');
 addGlobalStyle('.card{border-radius:0.3rem !important;}');
 addGlobalStyle('.pb-3, .py-3{padding-bottom: 0.3rem !important;}')
 
-// remove header
-//addGlobalStyle('#page-header{display: none !important;}');
-
-// remove the waving hand
+// remove the very annoying waving hand to increase overall well-being
 addGlobalStyle('#page-header > div > div.d-flex.align-items-center > h2{visibility:hidden;}');
 addGlobalStyle('#page-header > div > div.d-flex.align-items-center > h2:after{content:"Willkommen"; visibility:visible; position:absolute; left:60px}');
 
@@ -132,6 +206,9 @@ addGlobalStyle('#page-wrapper #page{height: 100vh !important;}');
 addGlobalStyle('.border-bottom{border-bottom: none !important;}'); //remove border below upcoming deadlines etc.
 addGlobalStyle('.card{border:none !important;}'); //remove border around elements (calendar, course overview, etc.)
 
+// re-add border on modules
+addGlobalStyle('.card-deck > .card{border: 0.3rem solid rgba(0,0,0,.125) !important;}');
+
 // remove unimportant elements
 document.getElementById('inst969724').remove(); //anmeldung von modulen
 document.getElementById('inst969725').remove(); //account beantragung fuer externe
@@ -143,10 +220,7 @@ addGlobalStyle('.dashboard-card-deck:not(.fixed-width-cards) .dashboard-card{min
 document.body.innerHTML = document.body.innerHTML.replaceAll('Meine Startseite','Startseite');
 
 // add module name in calendar preview WIP
-addGlobalStyle('#card-text content calendarwrapper{background-color:green !important;}');
-
-// re-add border on modules
-addGlobalStyle('.card-deck > .card{border: 0.3rem solid rgba(0,0,0,.125) !important;}');
+//addGlobalStyle('#card-text content calendarwrapper{background-color:green !important;}');
 
 // add LSF to top bar FOR NOW BY REPLACING FAQ
 addGlobalStyle('#moremenu-6462516b87efe-navbar-nav > li:nth-child(5){innerHTML="LSF"}');
