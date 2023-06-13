@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name Moodle Verbesserungen (TUDO)
+// @name Moodle Verbesserungen (TUDO) - test branch (issue 1)
 // @version 1.0
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
