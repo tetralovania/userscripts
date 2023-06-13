@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO) - test branch (issue 1)
 // @version 1.18
-// @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
+// @description Macht das Moodle ein kleines bisschen weniger grauenhaft. a
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
 // @author Lennart Klein
