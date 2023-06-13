@@ -6,4 +6,4 @@ This is a Userscript *specifically* for the TU Dortmund moodle. It is exclusivel
 If you find bugs, errors, whatever, or just want to improve something, feel free to open an issue and self-assign it :) You can open issues for things you don't want to fix yourself, but it might take a bit until I can get to it / finish it.
 
 Preview:
-![image.png](./resources/image.png)
+![image](https://github.com/tetralovania/userscripts/assets/86831655/bb38f571-347c-4ecf-ac7e-1e54d250d65a)
