@@ -214,11 +214,27 @@ footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes.forEac
 });
 
 //add userscript github
-var footnote = footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes[footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes.childElementCount-1];
+
+const footnote = footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes;
+console.log(footnote + " " + typeof footnote);
+
+//add separator
+var lastElement = footnote[footnote.length - 1];
 var separator = document.createElement('span');
-separator.textContent = '|';
+separator.textContent = ' | ';
 separator.style.display = 'inline';
-footnote.appendChild(separator);
+var parentElement = lastElement.parentNode;
+parentElement.insertBefore(separator, lastElement);
+
+//add link
+lastElement = footnote[footnote.length - 1];
+var link = document.createElement('a');
+link.textContent = 'Userscript Source, geschrieben von Lennart Klein';
+link.href = 'https://gitlab.fachschaften.org/lk/userscripts/';
+link.style.display = 'inline';
+link.style.color = '#1d2125';
+parentElement = lastElement.parentNode;
+parentElement.insertBefore(link, lastElement);
 
 //make overview elements not round
 addGlobalStyle('#page.drawers{margin-top:50px; height:auto;}');
