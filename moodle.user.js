@@ -230,7 +230,7 @@ parentElement.insertBefore(separator, lastElement);
 lastElement = footnote[footnote.length - 1];
 var link = document.createElement('a');
 link.textContent = 'Userscript Source, geschrieben von Lennart Klein';
-link.href = 'https://gitlab.fachschaften.org/lk/userscripts/';
+link.href = 'https://github.com/tetralovania/userscripts';
 link.style.display = 'inline';
 link.style.color = '#1d2125';
 parentElement = lastElement.parentNode;
