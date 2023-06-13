@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO) - test branch (issue 1)
-// @version 1.19
-// @description Macht das Moodle ein kleines bisschen weniger grauenhaft. a
+// @version 1.19.1
+// @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
 // @author Lennart Klein
@@ -256,7 +256,7 @@ addGlobalStyle('.card{border:none !important;}'); //remove border around element
 addGlobalStyle('.card-deck > .card{border: 0.3rem solid rgba(0,0,0,.125) !important;}');
 
 // fix course navigation header
-addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: 0 0 0 -1.7rem; padding: 0}');
+addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: 0 0 0 1.4rem; padding: 0}');
 
 // remove unimportant elements
 document.getElementById('inst969724').remove(); //anmeldung von modulen
