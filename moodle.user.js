@@ -9,6 +9,7 @@
 
 /* KNOWN ISSUES
  * doesnt work below 992px width
+ * clicking the more menu and then hovering the lower edge causes it to flicker
 */
 
 
@@ -154,7 +155,9 @@ function setCookie(name, value) {
   document.cookie = `${name}=${value}`;
 }
 
+function navitemToMoreMenu(childNr){
 
+}
 
 
 
@@ -202,6 +205,20 @@ addGlobalStyle('body {background-color: var(--backgroundColor) !important;}'); /
 addGlobalStyle('#page.drawers .main-inner{background-color: var(--darkAccent) !important; padding: 4rem 0.3rem 0 0.3rem; margin: 0;}');
 //addGlobalStyle('body .dark-theme{background-color: #4e5938 !important;}'); //dark
 addGlobalStyle('h2, .h2{color: var(--textColor);}'); //fixes text color
+addGlobalStyle('#footnote {color: var(--darkAccent);}'); //footnote separators
+var footer = document.getElementById('footnote');//footnote text color
+footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes.forEach(function(node){
+  if (node.nodeName === 'A') {
+    node.setAttribute('style', 'color: #1d2125');
+  }
+});
+
+//add userscript github
+var footnote = footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes[footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes.childElementCount-1];
+var separator = document.createElement('span');
+separator.textContent = '|';
+separator.style.display = 'inline';
+footnote.appendChild(separator);
 
 //make overview elements not round
 addGlobalStyle('#page.drawers{margin-top:50px; height:auto;}');
@@ -351,21 +368,31 @@ function forceintomoremenu() {
   // Create a new list for the dropdown menu
   var dropdownMenu = document.createElement('ul');
   dropdownMenu.setAttribute('class', 'dropdown-menu dropdown-menu-left');
+  dropdownMenu.setAttribute('style', 'padding-bottom: 0; padding-top: 14px');
   dropdownMenu.setAttribute('data-region', 'moredropdown');
   dropdownMenu.setAttribute('aria-labelledby', 'moremenu-dropdown-64801d6f87355');
   dropdownMenu.setAttribute('role', 'menu');
 
-  // Find the "Support" and "FAQ" list items
+  // Find the "Support", "FAQ" and "Kurssuche" list items
   var supportItem = primaryNav.childNodes[1].childNodes[1].childNodes[7];
   var faqItem = primaryNav.childNodes[1].childNodes[1].childNodes[9];
+  var courseSearchItem = primaryNav.childNodes[1].childNodes[1].childNodes[5];
 
   // Add dropdown-item class to the items
-  supportItem.setAttribute('class', 'dropdown-item');
+  supportItem.setAttribute('class', 'dropdown-item special-fucking-snowflake');
   faqItem.setAttribute('class', 'dropdown-item');
+  courseSearchItem.setAttribute('class', 'dropdown-item');
+  supportItem.setAttribute('style', 'background-color: white');
+  faqItem.setAttribute('style', 'background-color: white');
+  courseSearchItem.setAttribute('style', 'background-color: white');
+  supportItem.childNodes[1].setAttribute('style', 'border-top: 0');
+  faqItem.childNodes[1].setAttribute('style', 'border-top: 0');
+  courseSearchItem.childNodes[1].setAttribute('style', 'border-top: 0');
 
   // Append the "Support" and "FAQ" list items to the dropdown menu
   dropdownMenu.appendChild(supportItem);
   dropdownMenu.appendChild(faqItem);
+  dropdownMenu.appendChild(courseSearchItem);
 
   // Append the dropdown menu and link to the More menu
   moreMenu.appendChild(moreLink);
@@ -373,20 +400,8 @@ function forceintomoremenu() {
 
   // Append the More menu to the primary-navigation element
   primaryNav.querySelector('ul.nav').appendChild(moreMenu);
-
-  dropdownMenu.onload = modifyMoreMenu(dropdownMenu);
 }
 
-  function modifyMoreMenu(dropdownMenu){
-  // Modify the CSS for each dropdown item
-  var dropdownItems = dropdownMenu.querySelectorAll('.dropdown-item');
-  dropdownItems.forEach(function(item) {
-    item.style.height = "30.5px !important";
-    item.style.position = "relative";
-    item.style.top = "0 !important";
-    item.style.border = "0 !important";
-    });
-  }
 
 
 
