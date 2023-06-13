@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO) - test branch (issue 1)
-// @version 1.19.1
+// @version 1.19.2
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
@@ -264,6 +264,7 @@ document.getElementById('inst969725').remove(); //account beantragung fuer exter
 
 // change course display to show 4-5 elements per row instead of 3
 addGlobalStyle('.dashboard-card-deck:not(.fixed-width-cards) .dashboard-card{min-width: calc(20% - 0.5rem); max-width: calc(25% - 0.5rem);}');
+addGlobalStyle('.secondary-navigation .navigation .nav-tabs{margin: 0 0 0 1.4rem');
 
 // replace "Meine Startseite" with "Startseite"
 document.body.innerHTML = document.body.innerHTML.replaceAll('Meine Startseite','Startseite');
