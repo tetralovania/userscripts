@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO) - test branch (issue 1)
-// @version 1.19.2
+// @version 1.19.3
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
@@ -39,7 +39,7 @@ const addCourseNameToCalendar = async () => {
   for(let index = 0; index < 10; index++){
     var courseText = savedCourses.get(calEvents[index]);
     var courseLink = calEvents[index];
-    var finalCourseName = '<a href="course/view.php?id=' + calEvents[index] + '">' + courseText + '</a>';
+    var finalCourseName = '<a href="https://moodle.tu-dortmund.de/course/view.php?id=' + calEvents[index] + '">' + courseText + '</a>';
     document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).insertAdjacentHTML("beforeBegin",finalCourseName + " - ");
   }
 }
