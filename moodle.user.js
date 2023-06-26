@@ -259,8 +259,12 @@ addGlobalStyle('.card-deck > .card{border: 0.3rem solid rgba(0,0,0,.125) !import
 addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: 0 0 0 1.4rem; padding: 0}');
 
 // remove unimportant elements
-document.getElementById('inst969724').remove(); //anmeldung von modulen
-document.getElementById('inst969725').remove(); //account beantragung fuer externe
+try{
+  document.getElementById('inst969724').remove(); //anmeldung von modulen
+  document.getElementById('inst969725').remove(); //account beantragung fuer externe
+} catch (error){
+  console.error(error);
+}
 
 // change course display to show 4-5 elements per row instead of 3
 addGlobalStyle('.dashboard-card-deck:not(.fixed-width-cards) .dashboard-card{min-width: calc(20% - 0.5rem); max-width: calc(25% - 0.5rem);}');
@@ -273,13 +277,17 @@ document.body.innerHTML = document.body.innerHTML.replaceAll('Meine Startseite',
 //addGlobalStyle('#card-text content calendarwrapper{background-color:green !important;}');
 
 // add LSF to top bar FOR NOW BY REPLACING FAQ
-addGlobalStyle('#moremenu-6462516b87efe-navbar-nav > li:nth-child(5){innerHTML="LSF"}');
+// addGlobalStyle('#moremenu-6462516b87efe-navbar-nav > li:nth-child(5){innerHTML="LSF"}');
 // document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).insertAdjacentHTML("beforeBegin",
 
 // add Course to Calendar Elements on main page
 addCourseNameToCalendar();
+fixHeaderBar();
+console.log("uwu");
 
-//add Elements to header bar
+
+function fixHeaderBar(){
+  //add Elements to header bar
 // add LSF
   // Create a new list item
   var newItem = document.createElement("li");
@@ -358,7 +366,7 @@ addCourseNameToCalendar();
 
 //force useless stuff into more menu
  document.querySelector('.primary-navigation').onload = forceintomoremenu();
-
+}
 
 function forceintomoremenu() {
   // Find the primary-navigation element
@@ -418,9 +426,3 @@ function forceintomoremenu() {
   // Append the More menu to the primary-navigation element
   primaryNav.querySelector('ul.nav').appendChild(moreMenu);
 }
-
-
-
-
-
-//location.href=location.href.replace("/","/my");
