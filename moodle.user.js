@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO) - test branch (issue 1)
-// @version 1.19.3
+// @version 1.20.0
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
@@ -256,15 +256,29 @@ addGlobalStyle('.card{border:none !important;}'); //remove border around element
 addGlobalStyle('.card-deck > .card{border: 0.3rem solid rgba(0,0,0,.125) !important;}');
 
 // fix course navigation header
-addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: 0 0 0 1.4rem; padding: 0}');
+addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: 0 0 0 1.4rem; padding: 0; background-color: #ffffff00;}'); //fix position
+addGlobalStyle('.secondary-navigation .navigation .nav-tabs{background-color: #ffffff00;}');
+addGlobalStyle('.secondary-navigation .navigation .nav-tabs .nav-link{color: #ffffff;}');
+addGlobalStyle('.moremenu .nav-link.active:focus, .moremenu .nav-link.active:hover{background-color: #f8f9fa20;}');
+addGlobalStyle('.moremenu .nav-link:hover, .moremenu .nav-link:focus{background-color:#f8f9fa15;}');
+console.log(secnav);
+var secnav = document.getElementsByClassName('secondary-navigation');
+//add loop that sets background of every child element of secnav to #ffffff00 and sets text and border color of the children of the children of the children to #ffffff if they have li elements
+Array.from(secnav).forEach(function (element){
+  element.setAttribute('style', 'background-color: #ffffff00');
+  Array.from(element).forEach(function(child){
+    Array.from(child).forEach(function (child2){
+      Array.from(child2).forEach(function(child3){
+        child3.setAttribute('style', 'color: #ffffff; border-color: #ffffff');
+      });
+    });
+  });
+});
+
 
 // remove unimportant elements
-try{
-  document.getElementById('inst969724').remove(); //anmeldung von modulen
-  document.getElementById('inst969725').remove(); //account beantragung fuer externe
-} catch (error){
-  console.error(error);
-}
+document.getElementById('inst969724').remove(); //anmeldung von modulen
+document.getElementById('inst969725').remove(); //account beantragung fuer externe
 
 // change course display to show 4-5 elements per row instead of 3
 addGlobalStyle('.dashboard-card-deck:not(.fixed-width-cards) .dashboard-card{min-width: calc(20% - 0.5rem); max-width: calc(25% - 0.5rem);}');
@@ -277,17 +291,13 @@ document.body.innerHTML = document.body.innerHTML.replaceAll('Meine Startseite',
 //addGlobalStyle('#card-text content calendarwrapper{background-color:green !important;}');
 
 // add LSF to top bar FOR NOW BY REPLACING FAQ
-// addGlobalStyle('#moremenu-6462516b87efe-navbar-nav > li:nth-child(5){innerHTML="LSF"}');
+addGlobalStyle('#moremenu-6462516b87efe-navbar-nav > li:nth-child(5){innerHTML="LSF"}');
 // document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).insertAdjacentHTML("beforeBegin",
 
 // add Course to Calendar Elements on main page
 addCourseNameToCalendar();
-fixHeaderBar();
-console.log("uwu");
 
-
-function fixHeaderBar(){
-  //add Elements to header bar
+//add Elements to header bar
 // add LSF
   // Create a new list item
   var newItem = document.createElement("li");
@@ -366,7 +376,7 @@ function fixHeaderBar(){
 
 //force useless stuff into more menu
  document.querySelector('.primary-navigation').onload = forceintomoremenu();
-}
+
 
 function forceintomoremenu() {
   // Find the primary-navigation element
@@ -426,3 +436,9 @@ function forceintomoremenu() {
   // Append the More menu to the primary-navigation element
   primaryNav.querySelector('ul.nav').appendChild(moreMenu);
 }
+
+
+
+
+
+//location.href=location.href.replace("/","/my");
