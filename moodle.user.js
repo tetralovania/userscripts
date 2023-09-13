@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO)
-// @version 1.20.0
+// @version 1.21.0
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
@@ -32,17 +32,32 @@ function sleep(ms) {
 const addCourseNameToCalendar = async () => {
   let calMatch = '//a[contains(@href,"https://moodle.tu-dortmund.de/calendar/view.php?view=day&course=")]';
   const calEvents = [];
-  for(let index = 0; index < 10; index++){
-    calEvents[index] = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).href.split("&")[1].split("=")[1];
+  for (let index = 0; index < 10; index++) {
+    const element = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index);
+
+    if (element) {
+      const href = element.href;
+      if (href) {
+        const courseId = href.split("&")[1].split("=")[1];
+        calEvents[index] = courseId;
+      }
+    }
   }
-  const savedCourses = await courseNamesToMap()
-  for(let index = 0; index < 10; index++){
-    var courseText = savedCourses.get(calEvents[index]);
-    var courseLink = calEvents[index];
-    var finalCourseName = '<a href="https://moodle.tu-dortmund.de/course/view.php?id=' + calEvents[index] + '">' + courseText + '</a>';
-    document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index).insertAdjacentHTML("beforeBegin",finalCourseName + " - ");
+
+  const savedCourses = await courseNamesToMap();
+
+  for (let index = 0; index < 10; index++) {
+    const courseText = savedCourses.get(calEvents[index]);
+    const courseLink = calEvents[index];
+    const finalCourseName = '<a href="course/view.php?id=' + calEvents[index] + '">' + courseText + '</a>';
+    const element = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index);
+
+    if (element) {
+      element.insertAdjacentHTML("beforeBegin", finalCourseName + "​ "+ "-" + " ​");
+    }
   }
 }
+
 
 const processedEvents = []; // Array to track processed event IDs
 
@@ -50,6 +65,7 @@ async function courseNamesToMap() {
   const savedCourses = new Map();
   const calEvents = [];
   let calMatch = '//a[contains(@href,"https://moodle.tu-dortmund.de/calendar/view.php?view=day&course=")]';
+  console.log(calMatch);
   const calLength = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength;
 
   for (let index = 0; index < calLength; index++) {
@@ -155,6 +171,9 @@ function setCookie(name, value) {
   document.cookie = `${name}=${value}`;
 }
 
+function navitemToMoreMenu(childNr){
+
+}
 
 
 
@@ -256,25 +275,7 @@ addGlobalStyle('.card{border:none !important;}'); //remove border around element
 addGlobalStyle('.card-deck > .card{border: 0.3rem solid rgba(0,0,0,.125) !important;}');
 
 // fix course navigation header
-addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: 0 0 0 1.4rem; padding: 0; background-color: #ffffff00;}'); //fix position
-addGlobalStyle('.secondary-navigation .navigation .nav-tabs{background-color: #ffffff00;}');
-addGlobalStyle('.secondary-navigation .navigation .nav-tabs .nav-link{color: #ffffff;}');
-addGlobalStyle('.moremenu .nav-link.active:focus, .moremenu .nav-link.active:hover{background-color: #f8f9fa20;}');
-addGlobalStyle('.moremenu .nav-link:hover, .moremenu .nav-link:focus{background-color:#f8f9fa15;}');
-console.log(secnav);
-var secnav = document.getElementsByClassName('secondary-navigation');
-//add loop that sets background of every child element of secnav to #ffffff00 and sets text and border color of the children of the children of the children to #ffffff if they have li elements
-Array.from(secnav).forEach(function (element){
-  element.setAttribute('style', 'background-color: #ffffff00');
-  Array.from(element).forEach(function(child){
-    Array.from(child).forEach(function (child2){
-      Array.from(child2).forEach(function(child3){
-        child3.setAttribute('style', 'color: #ffffff; border-color: #ffffff');
-      });
-    });
-  });
-});
-
+addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: 0 0 0 -1.7rem; padding: 0}');
 
 // remove unimportant elements
 document.getElementById('inst969724').remove(); //anmeldung von modulen
@@ -282,7 +283,6 @@ document.getElementById('inst969725').remove(); //account beantragung fuer exter
 
 // change course display to show 4-5 elements per row instead of 3
 addGlobalStyle('.dashboard-card-deck:not(.fixed-width-cards) .dashboard-card{min-width: calc(20% - 0.5rem); max-width: calc(25% - 0.5rem);}');
-addGlobalStyle('.secondary-navigation .navigation .nav-tabs{margin: 0 0 0 1.4rem');
 
 // replace "Meine Startseite" with "Startseite"
 document.body.innerHTML = document.body.innerHTML.replaceAll('Meine Startseite','Startseite');
