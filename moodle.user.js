@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO)
-// @version 1.21.0
+// @version 1.22.0
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
-// @author Lennart Klein
+// @author Viv Klein
 // ==/UserScript==
 
 /* KNOWN ISSUES
@@ -49,7 +49,7 @@ const addCourseNameToCalendar = async () => {
   for (let index = 0; index < 10; index++) {
     const courseText = savedCourses.get(calEvents[index]);
     const courseLink = calEvents[index];
-    const finalCourseName = '<a href="course/view.php?id=' + calEvents[index] + '">' + courseText + '</a>';
+    const finalCourseName = '<a href="https://moodle.tu-dortmund.de/course/view.php?id=' + calEvents[index] + '">' + courseText + '</a>';
     const element = document.evaluate(calMatch, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(index);
 
     if (element) {
@@ -275,11 +275,21 @@ addGlobalStyle('.card{border:none !important;}'); //remove border around element
 addGlobalStyle('.card-deck > .card{border: 0.3rem solid rgba(0,0,0,.125) !important;}');
 
 // fix course navigation header
-addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: 0 0 0 -1.7rem; padding: 0}');
+addGlobalStyle('.secondary-navigation .navigation{border-bottom: none; background-color: #ffffff00; margin: auto; padding: 0; color:#ffffff !important}');
+addGlobalStyle('.secondary-navigation .navigation .nav-tabs .nav-link{color:#ffffff !important}');
+addGlobalStyle('.moremenu .nav-link.active:focus, .moremenu .nav-link.active:hover{background-color:#c8e68e}');
+addGlobalStyle('.moremenu .nav-link.active{border-bottom-color:#ffffff}');
+addGlobalStyle('.moremenu .nav-link:hover, .moremenu .nav-link:focus{background-color:#728350}');
+addGlobalStyle('.moremenu .nav-tabs{background-color: #ffffff00}');
 
 // remove unimportant elements
-document.getElementById('inst969724').remove(); //anmeldung von modulen
-document.getElementById('inst969725').remove(); //account beantragung fuer externe
+try {
+  document.getElementById('inst969724').remove(); //anmeldung von modulen
+  document.getElementById('inst969725').remove(); //account beantragung fuer externe
+} catch (error) {
+  console.error("Error:", error);
+}
+
 
 // change course display to show 4-5 elements per row instead of 3
 addGlobalStyle('.dashboard-card-deck:not(.fixed-width-cards) .dashboard-card{min-width: calc(20% - 0.5rem); max-width: calc(25% - 0.5rem);}');
