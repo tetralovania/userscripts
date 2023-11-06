@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO)
-// @version 1.22.0
+// @version 1.23.0
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
@@ -171,13 +171,82 @@ function setCookie(name, value) {
   document.cookie = `${name}=${value}`;
 }
 
-function navitemToMoreMenu(childNr){
+document.getElementsByTagName('body')[0].className = 'dark-theme || light-theme';
 
+function editCourseNames() {
+  // Get the saved courses from the cookie
+  const courses = getCookie("savedCourses");
+  const courseMap = parseMap(courses);
+
+  // Create a container for the popup window
+  const popupContainer = document.createElement('div');
+  popupContainer.style.position = 'absolute';
+  popupContainer.style.top = '50%';
+  popupContainer.style.left = '30%';
+  popupContainer.style.right = '30%';
+  popupContainer.style.transform = 'translate(0%, -50%)';
+  popupContainer.style.backgroundColor = '#c8e68e';
+  popupContainer.style.padding = '20px';
+  popupContainer.style.border = '1px solid #ccc';
+  popupContainer.style.borderRadius = '5px';
+  popupContainer.style.zIndex = '9999';
+
+  const title = document.createElement('div');
+  title.innerHTML = "Changes will be visible after refreshing the page :3";
+  // Create a form to display and edit the course names
+  const form = document.createElement('form');
+
+  // Iterate through the courseMap and create input fields for each course
+  for (const [courseId, courseName] of courseMap.entries()) {
+    const label = document.createElement('label');
+    label.textContent = `Course ID ${courseId}:`;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = courseName;
+    input.name = `course-${courseId}`; // Add the name attribute
+
+    label.appendChild(input);
+    form.appendChild(label);
+  }
+
+  // Create a save button to save the changes to newCourseMap
+  const saveButton = document.createElement('button');
+  saveButton.textContent = 'Save Changes';
+
+  saveButton.addEventListener('click', () => {
+    // Create a new course map to store the updated values
+    const newCourseMap = new Map();
+
+    // Iterate through the form inputs and update the course names
+    for (const [courseId, courseName] of courseMap.entries()) {
+      const input = form.querySelector(`input[name="course-${courseId}"]`);
+      if (input) {
+        newCourseMap.set(courseId, input.value);
+      } else {
+        newCourseMap.set(courseId, courseName);
+      }
+    }
+
+    // Save the updated course map in the cookie
+    const newCourses = stringifyMap(newCourseMap);
+    setCookie("savedCourses", newCourses);
+
+    // Close the popup window
+    document.body.removeChild(popupContainer);
+  });
+
+  // Append the form and save button to the popup container
+  popupContainer.appendChild(title);
+  popupContainer.appendChild(form);
+  popupContainer.appendChild(saveButton);
+
+  // Append the popup container to the body
+  document.body.appendChild(popupContainer);
 }
 
 
 
-document.getElementsByTagName('body')[0].className = 'dark-theme || light-theme';
 
 // map colors correctly
 // COLORS
@@ -245,7 +314,7 @@ parentElement.insertBefore(separator, lastElement);
 //add link
 lastElement = footnote[footnote.length - 1];
 var link = document.createElement('a');
-link.textContent = 'Userscript Source, geschrieben von Lennart Klein';
+link.textContent = 'Userscript Source, geschrieben von Vivian Klein';
 link.href = 'https://github.com/tetralovania/userscripts';
 link.style.display = 'inline';
 link.style.color = '#1d2125';
@@ -447,8 +516,23 @@ function forceintomoremenu() {
   primaryNav.querySelector('ul.nav').appendChild(moreMenu);
 }
 
+function addEditButtonToElement() {
+  const targetElement = document.querySelector('#inst1080603 > div');
 
+  if (targetElement) {
+    // Create the edit button
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit Course Names';
 
+    // Add a click event listener to the edit button
+    editButton.addEventListener('click', editCourseNames);
 
+    // Append the edit button to the target element
+    targetElement.appendChild(editButton);
+  } else {
+    console.log('Target element not found');
+  }
+}
 
-//location.href=location.href.replace("/","/my");
+// Call the function to add the edit button to the element
+addEditButtonToElement();
