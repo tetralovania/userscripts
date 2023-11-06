@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO)
-// @version 1.23.1
+// @version 1.23.2
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
@@ -286,7 +286,78 @@ function editCourseNames() {
   document.body.appendChild(popupContainer);
 }
 
+function resetCourseNames(){
+    // Create a container for the popup window
+  const popupContainer = document.createElement('div');
+  popupContainer.style.position = 'absolute';
+  popupContainer.style.top = '50%';
+  popupContainer.style.left = '30%';
+  popupContainer.style.right = '30%';
+  popupContainer.style.transform = 'translate(0%, -50%)';
+  popupContainer.style.backgroundColor = '#595959';
+  popupContainer.style.padding = '20px';
+  popupContainer.style.border = '0.3rem solid rgba(0,0,0,0.125)';
+  popupContainer.style.borderRadius = '5px';
+  popupContainer.style.zIndex = '9999';
+  popupContainer.style.color = '#fff';
 
+  const title = document.createElement('div');
+  title.innerHTML = "Are you really really sure you want to delete the cookie storing your courses?";
+  title.style.padding = '0 0 1rem 0';
+
+  // Create a close button
+  const closeButton = document.createElement('button');
+  closeButton.style.position = 'absolute';
+  closeButton.style.top = '10px';
+  closeButton.style.right = '10px';
+  closeButton.style.backgroundColor = 'transparent';
+  closeButton.style.border = 'none';
+  closeButton.style.color = '#fff';
+  closeButton.style.cursor = 'pointer';
+  closeButton.textContent = "X";
+
+  // Add a click event listener to the close button
+  closeButton.addEventListener('click', () => {
+    // Close the popup window without saving changes
+    document.body.removeChild(popupContainer);
+  });
+
+    // Create a save button to save the changes to newCourseMap
+  const resetButton = document.createElement('button');
+  resetButton.textContent = 'Reset';
+    resetButton.style.backgroundColor = '#d12e3e';
+    resetButton.style.padding = '0.375rem 0.75rem';
+    resetButton.style.border = '0.3rem solid rgba(0,0,0,0.125)';
+    resetButton.style.borderRadius = '0.5rem';
+    resetButton.style.color = '#333333';
+    resetButton.style.width = '100%';
+
+        // Add event listeners for hover
+    resetButton.addEventListener('mouseenter', () => {
+    // Set styles for hover
+    resetButton.style.backgroundColor = '#fff';
+    });
+
+    resetButton.addEventListener('mouseleave', () => {
+    // Restore the default styles on mouse leave
+    resetButton.style.backgroundColor = '#d12e3e';
+    });
+
+  resetButton.addEventListener('click', () => {
+    setCookie("savedCourses", "");
+
+    // Close the popup window
+    document.body.removeChild(popupContainer);
+    location.reload();
+  });
+
+  popupContainer.appendChild(title);
+  popupContainer.appendChild(closeButton);
+  popupContainer.appendChild(resetButton);
+
+    // Append the popup container to the body
+  document.body.appendChild(popupContainer);
+}
 
 
 // map colors correctly
@@ -569,7 +640,8 @@ function addEditButtonToElement() {
     editButton.style.border = '0.3rem solid rgba(0,0,0,0.125)';
     editButton.style.borderRadius = '0.5rem';
     editButton.style.color = '#333333';
-    editButton.style.width = '100%';
+    editButton.style.width = '49.5%';
+    editButton.style.left = '0';
 
         // Add event listeners for hover
     editButton.addEventListener('mouseenter', () => {
@@ -592,6 +664,44 @@ function addEditButtonToElement() {
   }
 }
 
+function addResetButtonToElement() {
+  const targetElement = document.querySelector('#inst1080603 > div');
+
+  if (targetElement) {
+    // Create the edit button
+    const resetButton = document.createElement('button');
+    resetButton.textContent = 'Reset All Cached Names';
+    resetButton.style.backgroundColor = '#fff';
+    resetButton.style.padding = '0.375rem 0.75rem';
+    resetButton.style.border = '0.3rem solid rgba(0,0,0,0.125)';
+    resetButton.style.borderRadius = '0.5rem';
+    resetButton.style.color = '#333333';
+    resetButton.style.width = '49.5%';
+    resetButton.style.position = 'absolute';
+    resetButton.style.right = '0';
+
+        // Add event listeners for hover
+    resetButton.addEventListener('mouseenter', () => {
+    // Set styles for hover
+    resetButton.style.backgroundColor = '#d12e3e';
+    });
+
+    resetButton.addEventListener('mouseleave', () => {
+    // Restore the default styles on mouse leave
+    resetButton.style.backgroundColor = '#fff';
+    });
+
+    // Add a click event listener to the edit button
+    resetButton.addEventListener('click', resetCourseNames);
+
+    // Append the edit button to the target element
+    targetElement.appendChild(resetButton);
+  } else {
+    console.log('Target element not found');
+  }
+}
+
 
 // Call the function to add the edit button to the element
 addEditButtonToElement();
+addResetButtonToElement();
