@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Moodle Verbesserungen (TUDO)
-// @version 1.23.0
+// @version 1.23.1
 // @description Macht das Moodle ein kleines bisschen weniger grauenhaft.
 // @include https://moodle.tu-dortmund.de/**
 // @grant        GM_xmlhttpRequest
@@ -185,16 +185,38 @@ function editCourseNames() {
   popupContainer.style.left = '30%';
   popupContainer.style.right = '30%';
   popupContainer.style.transform = 'translate(0%, -50%)';
-  popupContainer.style.backgroundColor = '#c8e68e';
+  popupContainer.style.backgroundColor = '#595959';
   popupContainer.style.padding = '20px';
-  popupContainer.style.border = '1px solid #ccc';
+  popupContainer.style.border = '0.3rem solid rgba(0,0,0,0.125)';
   popupContainer.style.borderRadius = '5px';
   popupContainer.style.zIndex = '9999';
+  popupContainer.style.color = '#fff';
 
   const title = document.createElement('div');
   title.innerHTML = "Changes will be visible after refreshing the page :3";
+  title.style.padding = '0 0 1rem 0';
+
+  // Create a close button
+  const closeButton = document.createElement('button');
+  closeButton.style.position = 'absolute';
+  closeButton.style.top = '10px';
+  closeButton.style.right = '10px';
+  closeButton.style.backgroundColor = 'transparent';
+  closeButton.style.border = 'none';
+  closeButton.style.color = '#fff';
+  closeButton.style.cursor = 'pointer';
+  closeButton.textContent = "X";
+
+  // Add a click event listener to the close button
+  closeButton.addEventListener('click', () => {
+    // Close the popup window without saving changes
+    document.body.removeChild(popupContainer);
+  });
+
+
   // Create a form to display and edit the course names
   const form = document.createElement('form');
+  form.style.padding = '0 0 1rem 0';
 
   // Iterate through the courseMap and create input fields for each course
   for (const [courseId, courseName] of courseMap.entries()) {
@@ -212,7 +234,24 @@ function editCourseNames() {
 
   // Create a save button to save the changes to newCourseMap
   const saveButton = document.createElement('button');
-  saveButton.textContent = 'Save Changes';
+  saveButton.textContent = 'Save Changes and Reload Page';
+    saveButton.style.backgroundColor = '#fff';
+    saveButton.style.padding = '0.375rem 0.75rem';
+    saveButton.style.border = '0.3rem solid rgba(0,0,0,0.125)';
+    saveButton.style.borderRadius = '0.5rem';
+    saveButton.style.color = '#333333';
+    saveButton.style.width = '100%';
+
+        // Add event listeners for hover
+    saveButton.addEventListener('mouseenter', () => {
+    // Set styles for hover
+    saveButton.style.backgroundColor = 'var(--backgroundColor)';
+    });
+
+    saveButton.addEventListener('mouseleave', () => {
+    // Restore the default styles on mouse leave
+    saveButton.style.backgroundColor = '#fff';
+    });
 
   saveButton.addEventListener('click', () => {
     // Create a new course map to store the updated values
@@ -234,12 +273,14 @@ function editCourseNames() {
 
     // Close the popup window
     document.body.removeChild(popupContainer);
+    location.reload();
   });
 
   // Append the form and save button to the popup container
   popupContainer.appendChild(title);
   popupContainer.appendChild(form);
   popupContainer.appendChild(saveButton);
+  popupContainer.appendChild(closeButton);
 
   // Append the popup container to the body
   document.body.appendChild(popupContainer);
@@ -523,6 +564,23 @@ function addEditButtonToElement() {
     // Create the edit button
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit Course Names';
+    editButton.style.backgroundColor = '#fff';
+    editButton.style.padding = '0.375rem 0.75rem';
+    editButton.style.border = '0.3rem solid rgba(0,0,0,0.125)';
+    editButton.style.borderRadius = '0.5rem';
+    editButton.style.color = '#333333';
+    editButton.style.width = '100%';
+
+        // Add event listeners for hover
+    editButton.addEventListener('mouseenter', () => {
+    // Set styles for hover
+    editButton.style.backgroundColor = 'var(--backgroundColor)';
+    });
+
+    editButton.addEventListener('mouseleave', () => {
+    // Restore the default styles on mouse leave
+    editButton.style.backgroundColor = '#fff';
+    });
 
     // Add a click event listener to the edit button
     editButton.addEventListener('click', editCourseNames);
@@ -533,6 +591,7 @@ function addEditButtonToElement() {
     console.log('Target element not found');
   }
 }
+
 
 // Call the function to add the edit button to the element
 addEditButtonToElement();
