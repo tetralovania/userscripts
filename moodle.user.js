@@ -413,10 +413,14 @@ footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes.forEac
 //add userscript github
 
 const footnote = footer.childNodes[1].childNodes[1].childNodes[1].childNodes[0].childNodes;
+addGlobalStyle('#footnote a{color: #1d2125 !important}');
+
+
 console.log(footnote + " " + typeof footnote);
 
 //add separator
-var lastElement = footnote[footnote.length - 1];
+var nodes = footer.childNodes[1].childNodes[1].childNodes[1].childNodes;
+var lastElement = nodes[10];
 var separator = document.createElement('span');
 separator.textContent = ' | ';
 separator.style.display = 'inline';
@@ -424,7 +428,8 @@ var parentElement = lastElement.parentNode;
 parentElement.insertBefore(separator, lastElement);
 
 //add link
-lastElement = footnote[footnote.length - 1];
+var nodes = footer.childNodes[1].childNodes[1].childNodes[1].childNodes;
+lastElement = nodes[11];
 var link = document.createElement('a');
 link.textContent = 'Userscript Source, geschrieben von Vivian Klein';
 link.href = 'https://github.com/tetralovania/userscripts';
@@ -629,7 +634,7 @@ function forceintomoremenu() {
 }
 
 function addEditButtonToElement() {
-  const targetElement = document.querySelector('#inst1080603 > div');
+  const targetElement = document.querySelector('block_calendar_upcoming block  card mb-3 > div');
 
   if (targetElement) {
     // Create the edit button
@@ -665,7 +670,8 @@ function addEditButtonToElement() {
 }
 
 function addResetButtonToElement() {
-  const targetElement = document.querySelector('#inst1080603 > div');
+  // block_calendar_upcoming block  card mb-3
+  const targetElement = document.querySelector('block_calendar_upcoming block  card mb-3 > div');
 
   if (targetElement) {
     // Create the edit button
