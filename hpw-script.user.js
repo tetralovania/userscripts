@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.1
+// @version      1.3
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
 // @match        https://docs.google.com/**
@@ -63,11 +63,11 @@ function addLogo() {
   // change accent color
     const accentedButtons = Array.from(document.querySelectorAll('*')).filter(elem => {
     const computedStyle = window.getComputedStyle(elem);
-    return computedStyle.backgroundColor === 'rgb(103, 58, 183)';
+    return computedStyle.backgroundColor === 'rgb(134, 117, 80)' || computedStyle.backgroundColor === 'rgb(147, 132, 102)';
     });
     const accentedTexts = Array.from(document.querySelectorAll('*')).filter(elem => {
     const computedStyle = window.getComputedStyle(elem);
-    return computedStyle.color === 'rgb(103, 58, 183)';
+    return computedStyle.color === 'rgb(134, 117, 80)' || computedStyle.backgroundColor === 'rgb(147, 132, 102)';
     });
     accentedButtons.forEach(elem => {
       elem.style.backgroundColor = accentColor;
@@ -84,7 +84,16 @@ function addLogo() {
     window.addEventListener('load', addLogo);
 
   //remove unimportant elements
-  //todo
+  //fetch "Konto wechseln" button to get to the account section by iterating up the DOM
+  const accChoosers = Array.from(document.querySelectorAll('[href]')).filter(element => {
+    return element.href.includes("https://accounts.google.com/AccountChooser");
+  });
+  const kontoWechseln = accChoosers[0];
+  kontoWechseln.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = "none";
+
+  const footer = document.querySelectorAll('[href="//www.google.com/forms/about/?utm_source=product&utm_medium=forms_logo&utm_campaign=forms"]');
+  footer[0].style.display = "none";
+
 
     // Check if the current URL matches the trigger URL
     if (window.location.href.includes(triggerUrl)) {
