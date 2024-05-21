@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.0
+// @version      1.1
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
 // @match        https://docs.google.com/**
@@ -15,7 +15,7 @@ function addGlobalStyle(css) {
     if (!head) { return; }
     style = document.createElement('style');
     style.type = 'text/css';
-    style.innerHTML = css;
+    style.textContent = css;
     head.appendChild(style);
 }
 
