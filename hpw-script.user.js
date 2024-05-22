@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.4
+// @version      1.5
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
 // @match        https://docs.google.com/**
@@ -95,7 +95,7 @@ function addLogo() {
 
 
     // Change background color
-    addGlobalStyle('.D8bnZd { background-color: var(--backgroundColor); }');
+  document.body.style.backgroundColor=backgroundColor;
 
     // Add the logo once the page has fully loaded
     window.addEventListener('load', addLogo);
