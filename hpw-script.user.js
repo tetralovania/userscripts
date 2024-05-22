@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.3
+// @version      1.4
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
 // @match        https://docs.google.com/**
@@ -19,19 +19,39 @@ function addGlobalStyle(css) {
     head.appendChild(style);
 }
 
-// Function to add a logo
+    // Define colors
+    addGlobalStyle(':root { --backgroundColor: #B3CDC5; --accentColor: #93A8A2; }');
+    const backgroundColor = "#B3CDC5";
+    const accentColor = "#93A8A2";
+
+// Function to add a logo and accent stripe
 function addLogo() {
     const logoUrl = 'https://hp-w.de/wp-content/uploads/2021/11/hpw-logo.svg';
     const logo = document.createElement('img');
     logo.src = logoUrl;
     logo.alt = 'Logo';
     logo.style.position = 'fixed';
-    logo.style.top = '10px';
+    logo.style.top = '50px';
     logo.style.left = '10px';
     logo.style.zIndex = '1000';
-    logo.style.width = '100px'; // Adjust size as needed
+    logo.style.width = '100px';
     document.body.appendChild(logo);
+
+    const container = document.createElement('div');
+    container.style.height = '30px';
+    container.style.width = '100%';
+    container.style.backgroundColor = 'transparent';
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    document.body.insertBefore(container, document.body.firstChild);
+
+    const coloredRect = document.createElement('div');
+    coloredRect.style.height = '30px';
+    coloredRect.style.width = '250px';
+    coloredRect.style.backgroundColor = accentColor;
+    container.appendChild(coloredRect);
 }
+
 
 (function() {
     'use strict';
@@ -40,10 +60,7 @@ function addLogo() {
     const targetUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScXMVoNMkt-XIT9hOJeHfOG93TWxpXJ5uCKBQ5foDHhBJgHuQ/viewform?usp=sf_link';
     const triggerUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLScXMVoNMkt-XIT9hOJeHfOG93TWxpXJ5uCKBQ5foDHhBJgHuQ/formResponse';
 
-    // Define colors
-    addGlobalStyle(':root { --backgroundColor: #B3CDC5; --accentColor: #93A8A2; }');
-    const backgroundColor = "#B3CDC5";
-    const accentColor = "#93A8A2";
+
 
     // Load font from Google Fonts
     const link = document.createElement('link');
