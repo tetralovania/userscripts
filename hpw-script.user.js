@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.6.2
+// @version      1.6.3
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
 // @match        *://**/**
@@ -63,18 +63,23 @@ function addLogo() {
     container.appendChild(coloredRect);
 }
 
-  // Function to request fullscreen
-    function requestFullscreen(element) {
-        if (element.requestFullscreen) {
-            element.requestFullscreen();
-        } else if (element.mozRequestFullScreen) { // Firefox
-            element.mozRequestFullScreen();
-        } else if (element.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-            element.webkitRequestFullscreen();
-        } else if (element.msRequestFullscreen) { // IE/Edge
-            element.msRequestFullscreen();
-        }
+// Function to request fullscreen for a given element
+function requestFullscreen(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) { // Firefox
+        element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) { // Chrome, Safari and Opera
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) { // IE/Edge
+        element.msRequestFullscreen();
     }
+}
+
+// Function to check if fullscreen mode is active
+function isFullscreen() {
+    return document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+}
 
 // Function to create and add a fullscreen button
 function addFullscreenButton() {
@@ -91,12 +96,26 @@ function addFullscreenButton() {
     button.style.cursor = 'pointer';
 
     button.addEventListener('click', function() {
-        requestFullscreen(document.head);
-        requestFullscreen(document.body);
+        requestFullscreen(document.documentElement);
     });
 
     document.body.appendChild(button);
+
+    // Event listener for fullscreen changes
+    document.addEventListener('fullscreenchange', function() {
+        if (isFullscreen()) {
+            button.style.display = 'none';
+        } else {
+            button.style.display = 'block';
+        }
+    });
+
+    // Simulate a click event on the button
+    button.click();
 }
+
+// Call the function to add the fullscreen button
+addFullscreenButton();
 
 (function() {
     'use strict';
@@ -113,8 +132,6 @@ function addFullscreenButton() {
     } else {
         console.log("not redirecting");
     }
-
-
 
     // Load font from Google Fonts
     const link = document.createElement('link');
@@ -170,6 +187,4 @@ function addFullscreenButton() {
     if (footer[0]) {
         footer[0].style.display = "none";
     }
-
-
 })();
