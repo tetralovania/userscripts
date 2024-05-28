@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.6.7
+// @version      1.7
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
 // @match        *://**/**
@@ -81,42 +81,6 @@ function isFullscreen() {
     return document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
 }
 
-/*// Function to create and add a fullscreen button
-function addFullscreenButton() {
-    const button = document.createElement('button');
-    button.textContent = 'Enter Fullscreen';
-    button.style.position = 'fixed';
-    button.style.top = '10px';
-    button.style.right = '10px';
-    button.style.zIndex = '1000';
-    button.style.padding = '10px';
-    button.style.backgroundColor = accentColor;
-    button.style.border = 'none';
-    button.style.color = 'white';
-    button.style.cursor = 'pointer';
-
-    button.addEventListener('click', function() {
-        requestFullscreen(document.documentElement);
-    });
-
-    document.body.appendChild(button);
-
-    // Event listener for fullscreen changes
-    document.addEventListener('fullscreenchange', function() {
-        if (isFullscreen()) {
-            button.style.display = 'none';
-        } else {
-            button.style.display = 'block';
-        }
-    });
-
-    // Simulate a click event on the button
-    button.click();
-}
-
-// Call the function to add the fullscreen button
-addFullscreenButton();
-*/
 (function() {
     'use strict';
 
@@ -188,12 +152,14 @@ addFullscreenButton();
     }
 
   //move legal text
-  const legalTexts = Array.from(document.querySelectorAll('a')).filter(elem => elem.href = 'https://policies.google.com/terms');
-  legalTexts[1].parentElement.style.position = 'absolute';
-  legalTexts[1].parentElement.style.width = '10vw';
-  legalTexts[1].parentElement.style.left = '0';
-  legalTexts[1].parentElement.style.bottom = '20px';
+  const legalTexts = Array.from(document.querySelectorAll('a')).filter(elem => elem.href === 'https://policies.google.com/terms');
+  legalTexts[0].parentElement.style.position = 'absolute';
+  legalTexts[0].parentElement.style.width = '15vw';
+  legalTexts[0].parentElement.style.left = '0';
+  legalTexts[0].parentElement.style.bottom = '0';
 
+  const reportProblem = Array.from(document.querySelectorAll('[data-tooltip="Problem an Google melden"'));
+  reportProblem[0].style.display = 'none';
 
 
 })();
