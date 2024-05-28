@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.5
+// @version      1.6
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
-// @match        https://docs.google.com/**
+// @match        *://**/**
 // @grant        none
 // ==/UserScript==
 
@@ -24,7 +24,7 @@ function addGlobalStyle(css) {
     const backgroundColor = "#B3CDC5";
     const accentColor = "#93A8A2";
 
-// Function to add a logo and accent stripe
+// Function to add a logo, qr code and accent stripe
 function addLogo() {
     const logoUrl = 'https://hp-w.de/wp-content/uploads/2021/11/hpw-logo.svg';
     const logo = document.createElement('img');
@@ -36,6 +36,17 @@ function addLogo() {
     logo.style.zIndex = '1000';
     logo.style.width = '100px';
     document.body.appendChild(logo);
+
+  const qrCodeUrl = 'https://i.imgur.com/nDsVEBo.png'
+  const qrCode = document.createElement('img');
+  qrCode.src = qrCodeUrl;
+    qrCode.alt = 'QR Code';
+    qrCode.style.position = 'fixed';
+    qrCode.style.bottom = '50px';
+    qrCode.style.right = '50px';
+    qrCode.style.zIndex = '1000';
+    qrCode.style.width = '130px';
+    document.body.appendChild(qrCode);
 
     const container = document.createElement('div');
     container.style.height = '30px';
@@ -60,7 +71,14 @@ function addLogo() {
     const targetUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScXMVoNMkt-XIT9hOJeHfOG93TWxpXJ5uCKBQ5foDHhBJgHuQ/viewform?usp=sf_link';
     const triggerUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLScXMVoNMkt-XIT9hOJeHfOG93TWxpXJ5uCKBQ5foDHhBJgHuQ/formResponse';
 
-
+// Check if the current URL matches the trigger URL
+    if (!window.location.href.includes(targetUrl)) {
+      console.log("redirecting");
+        // Redirect to the target URL
+        window.location.href = targetUrl;
+    } else {
+      console.log("not redirecting");
+    }
 
     // Load font from Google Fonts
     const link = document.createElement('link');
@@ -112,9 +130,5 @@ function addLogo() {
   footer[0].style.display = "none";
 
 
-    // Check if the current URL matches the trigger URL
-    if (window.location.href.includes(triggerUrl)) {
-        // Redirect to the target URL
-        window.location.href = targetUrl;
-    }
+
 })();
