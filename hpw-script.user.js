@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.6.3
+// @version      1.6.6
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
 // @match        *://**/**
@@ -81,7 +81,7 @@ function isFullscreen() {
     return document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
 }
 
-// Function to create and add a fullscreen button
+/*// Function to create and add a fullscreen button
 function addFullscreenButton() {
     const button = document.createElement('button');
     button.textContent = 'Enter Fullscreen';
@@ -116,7 +116,7 @@ function addFullscreenButton() {
 
 // Call the function to add the fullscreen button
 addFullscreenButton();
-
+*/
 (function() {
     'use strict';
 
@@ -167,10 +167,9 @@ addFullscreenButton();
     // Change background color
     document.body.style.backgroundColor = backgroundColor;
 
-    // Add the logo and fullscreen button once the page has fully loaded
+    // Add the logo once the page has fully loaded
     window.addEventListener('load', function() {
         addLogo();
-        addFullscreenButton(); // Add the fullscreen button
     });
 
     // Remove unimportant elements
@@ -182,6 +181,14 @@ addFullscreenButton();
     if (kontoWechseln) {
         kontoWechseln.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = "none";
     }
+
+  //move legal text
+  const legalTexts = Array.from(document.querySelectorAll('a')).filter(elem => elem.href = 'https://policies.google.com/terms');
+  legalTexts[1].parentElement.style.position = 'absolute';
+  legalTexts[1].parentElement.style.width = '10vw';
+  legalTexts[1].parentElement.style.left = '0';
+  legalTexts[1].parentElement.style.bottom = '20px';
+
 
     const footer = document.querySelectorAll('[href="//www.google.com/forms/about/?utm_source=product&utm_medium=forms_logo&utm_campaign=forms"]');
     if (footer[0]) {
