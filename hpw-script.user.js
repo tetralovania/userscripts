@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HPW Digital-Check Redirect Script Google Forms
 // @namespace    https://hp-w.de/
-// @version      1.6.6
+// @version      1.6.7
 // @description  Weiterleitung zurück zum Anfang des "Digital-Check"-Forms, sobald die Umfrage vom Nutzer abgeschlossen wurde.
 // @author       Vivian Klein
 // @match        *://**/**
@@ -133,6 +133,11 @@ addFullscreenButton();
         console.log("not redirecting");
     }
 
+  const footer = document.querySelectorAll('[href="//www.google.com/forms/about/?utm_source=product&utm_medium=forms_logo&utm_campaign=forms"]');
+    if (footer[0]) {
+        footer[0].style.display = "none";
+    }
+
     // Load font from Google Fonts
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap';
@@ -190,8 +195,5 @@ addFullscreenButton();
   legalTexts[1].parentElement.style.bottom = '20px';
 
 
-    const footer = document.querySelectorAll('[href="//www.google.com/forms/about/?utm_source=product&utm_medium=forms_logo&utm_campaign=forms"]');
-    if (footer[0]) {
-        footer[0].style.display = "none";
-    }
+
 })();
